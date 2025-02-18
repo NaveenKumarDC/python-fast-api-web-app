@@ -1,1 +1,2 @@
 fastapi~=0.115.8
+pymongo==4.0.1
