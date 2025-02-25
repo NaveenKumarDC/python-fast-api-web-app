@@ -12,12 +12,15 @@ load_dotenv()
 # MongoDB hosting type
 # Default port of MongoDB is 27017
 # MongoDB Database name
-MONGO_USERNAME = "prd_user"
-MONGO_PASSWORD = "prd_user"
-MONGO_HOST = "localhost"
+MONGO_USERNAME = "naveendc"
+MONGO_PASSWORD = "naveendc"
+MONGO_HOST = "127.0.0.1"
 MONGO_PORT =27017
 MONGO_DB = "prd_1"
 
 # Create a MongoDB client
-client = MongoClient(f"mongodb://{MONGO_USERNAME}:{MONGO_PASSWORD}@{MONGO_HOST}:{MONGO_PORT}/{MONGO_DB};");
+# uri = f"mongodb://{MONGO_USERNAME}:{MONGO_PASSWORD}@{MONGO_HOST}:{MONGO_PORT}/{MONGO_DB};"
+uri = "mongodb://naveendc:naveendc@127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&authSource=prd_1&appName=mongosh+2.3.9"
+print(uri)
+client = MongoClient(uri)
 db = client[MONGO_DB]

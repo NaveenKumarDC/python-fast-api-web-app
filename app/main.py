@@ -1,8 +1,8 @@
 from fastapi import Depends, FastAPI
 
-from app.dependencies import get_query_token, get_token_header
-from app.routers.internal import admin
-from app.routers import items, users, EmployeeRouter
+from dependencies import get_query_token, get_token_header
+from routers.internal import admin
+from routers import items, users, EmployeeRouter
 
 app = FastAPI(dependencies=[Depends(get_query_token)])
 
@@ -26,3 +26,7 @@ async def root():
                        ""
                        ""
                        "r Applications!"}
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)

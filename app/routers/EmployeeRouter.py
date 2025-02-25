@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
-from app.dependencies import get_token_header
-from app.core.MongoDataBase import db
-from app.model import Employee
+from dependencies import get_token_header
+from core.MongoDataBase import db
+from model import Employee
 
 
 router = APIRouter(
@@ -11,26 +11,34 @@ router = APIRouter(
     responses={404: {"description": "Not found"}},
 )
 
-@router.post("/create_employee/", response_model=None)
-async def create_item(employee: Employee) -> Employee:
+@router.post("/create_employee/", response_model= None)
+async def create_employee(email: str) -> Employee:
     """
     Create a new employee.
     Args:
-        employee (Employee): the employee details to be created
+        emp (Employee): the employee details to be created
     Returns:
         Employee: Employee Json object
     """
     # Check if the email already exists in the database
-    existing_employee_details = db.employee.find_one({"email": employee.email})
+    existing_employee_details = db.employee.find_one({"email": email})
     if not existing_employee_details:
-        raise HTTPException(status_code=404, detail="Employee not found")
-
-    result = db.employee.insert_one(employee.dict())
-    employee_details = db.employee.find_one({"_id": result.inserted_id})
-    inserted_email = str(employee_details["email"])
-    return f"Employee with email {inserted_email} has been created"
+        # raise HTTPException(status_code=404, detail="Employee not found")
+        result = db.employee.insert_one({"email": email})
+        employee_details = db.employee.find_one({"_id": result.inserted_id})
+        if employee_details:
+            employee_details["_id"] = str(employee_details["_id"])
+        return employee_details
+    else:
+        # return {"message": f"Employee with email {email} has been created"}
+        if existing_employee_details:
+            existing_employee_details["_id"] = str(existing_employee_details["_id"])
+        return existing_employee_details
+    # inserted_email = str(employee_details["email"])
+    # return f"Employee with email {inserted_email} has been created"
     # return {**employee_details, "id": str(employee_details["_id"])}
     # return {"message": f"Employee with email {inserted_email} has been created"}
+
 
 @router.get("/get_employee/")
 async def get_all_employees():
